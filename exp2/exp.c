@@ -2,20 +2,16 @@
 #include <string.h>
 #include <ctype.h>
 
-// List of C keywords
 const char *keywords[] = {
     "int", "float", "char", "double", "if", "else", "while", "for", "do", "return",
     "switch", "case", "break", "continue", "void", "static", "struct", "typedef", "union",
     "default", "sizeof", "const", "volatile", "enum", "extern", "register", "goto", "long", "short", "signed", "unsigned"
 };
 
-// List of C operators
 const char *operators[] = {"+", "-", "*", "/", "=", "==", "!=", "<", ">", "<=", ">=", "&&", "||", "++", "--"};
 
-// List of special symbols (delimiters)
 const char special_symbols[] = {';', ',', '(', ')', '{', '}', '[', ']', '"', '\'', '#'};
 
-// Function to check if a token is a keyword
 int isKeyword(char *token) {
     for (int i = 0; i < sizeof(keywords) / sizeof(keywords[0]); i++) {
         if (strcmp(token, keywords[i]) == 0)
@@ -24,7 +20,6 @@ int isKeyword(char *token) {
     return 0;
 }
 
-// Function to check if a token is an operator
 int isOperator(char *token) {
     for (int i = 0; i < sizeof(operators) / sizeof(operators[0]); i++) {
         if (strcmp(token, operators[i]) == 0)
@@ -33,7 +28,6 @@ int isOperator(char *token) {
     return 0;
 }
 
-// Function to check if a character is a special symbol
 int isSpecialSymbol(char ch) {
     for (int i = 0; i < sizeof(special_symbols) / sizeof(special_symbols[0]); i++) {
         if (ch == special_symbols[i])
@@ -42,7 +36,6 @@ int isSpecialSymbol(char ch) {
     return 0;
 }
 
-// Function to check if a token is a valid identifier (variable/function name)
 int isIdentifier(char *token) {
     if (!isalpha(token[0]) && token[0] != '_') // Identifiers must start with a letter or underscore
         return 0;
@@ -53,13 +46,9 @@ int isIdentifier(char *token) {
     return !isKeyword(token); // Should not be a keyword
 }
 
-// Main function
-int main() {
-    char code[500], token[50];
+void analyzeCode(char *code) {
+    char token[50];
     int i = 0, j = 0;
-
-    printf("Enter a C code snippet:\n");
-    fgets(code, sizeof(code), stdin);
 
     printf("\nRecognized Tokens:\n");
 
@@ -76,11 +65,11 @@ int main() {
                 else if (isIdentifier(token))
                     printf("Identifier: %s\n", token);
                 else
-                    printf("Unknown Token: %s\n", token);
+                    printf("Constant: %s\n", token);
             }
 
             if (isSpecialSymbol(code[i]))  
-                printf("Special Symbol: %c\n", code[i]);
+                printf("Delimiter: %c\n", code[i]);
 
         } else if (ispunct(code[i])) {  // Handling operators separately
             if (j != 0) {  
@@ -90,7 +79,7 @@ int main() {
                     printf("Identifier: %s\n", token);
             }
 
-            char op[3] = {code[i], code[i + 1], '\0'};// Checking for multichar operator like == != <=
+            char op[3] = {code[i], code[i + 1], '\0'}; // Checking for multichar operator like == != <=
             if (isOperator(op)) {
                 printf("Operator: %s\n", op);
                 i++; 
@@ -104,5 +93,22 @@ int main() {
         }
         i++;
     }
+}
+
+int main() {
+    char code[1000] = "";
+    char temp[50];
+
+    printf("Enter a C code snippet (type 'END' to stop):\n");
+
+    while (1) {
+        fgets(temp, sizeof(temp), stdin);
+        if (strncmp(temp, "END", 3) == 0) 
+            break;
+        strcat(code, temp);
+    }
+
+    analyzeCode(code);
+
     return 0;
 }
