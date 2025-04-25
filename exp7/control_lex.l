@@ -1,5 +1,5 @@
 %{
-#include "y.tab.h"
+#include "control_yacc.tab.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
